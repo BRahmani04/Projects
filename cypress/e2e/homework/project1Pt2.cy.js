@@ -50,13 +50,13 @@ describe('Project 01', () => {
         {
             description: 'Validate the Address input box',
             label: 'Address',
-            placeholder: 'Enter your address*',
+            placeholder: 'Enter your address',
             required: false
         },
         {
             description: 'Validate the Email input box',
             label: 'Email *',
-            placeholder: '“Enter your email',
+            placeholder: 'Enter your email',
             required: true
         },
         {
@@ -68,7 +68,7 @@ describe('Project 01', () => {
         {
             description: 'Validate the Message input box',
             label: 'Message',
-            placeholder: 'Type your message here…',
+            placeholder: 'Type your message here...',
             required: false
         }
     ]
@@ -81,7 +81,47 @@ describe('Project 01', () => {
             cy.contains('.label', test.label).should('have.text', test.label)
         
             cy.contains('.label', test.label).parent().find('input, textarea').should('be.visible')
-            .and('have.attr', test.placeholder)
+            .and('have.attr', 'placeholder', test.placeholder)
             .and(test.required ? 'have.attr' : 'not.have.attr', 'required')
         })
+        it('Test Case 08 - Validate the Consent checkbox', () => {
+ 
+            cy.visit('https://techglobal-training.com/frontend/project-1');
+        
+            cy.get('.checkbox').should('have.text', ' I give my consent to be contacted.')
+            cy.get('.checkbox > input').should('have.attr', 'required')
+            cy.get('.checkbox > input').click().should('be.checked').click().should('not.be.checked')
+        
+           })
+        
+           it('Test Case 09 - Validate the SUBMIT button', () => {
+        
+            cy.visit('https://techglobal-training.com/frontend/project-1');
+        
+            cy.get('.control > .button').should('be.visible').and('be.enabled').and('have.text', 'SUBMIT')
+        
+           })
+        
+           it('Test Case 10 - Validate the form submission', () => {
+        
+            cy.visit('https://techglobal-training.com/frontend/project-1');
+        
+            const info = ['Bajram Rahmani', '111 Chicago Il 60110', 'br@gmail.com', '907-231-1234', 'I like TechGlobal']
+        
+            cy.get('form > div > div > .input, .textarea').each(($el, index) => {
+                cy.wrap($el).type(info[index])
+            })
+        
+            cy.get(':nth-child(2) > .mr-1').click()
+        
+            cy.get('.checkbox > input').click()
+        
+            cy.get('.control > .button').realClick()
+        
+            Cypress.on('uncaught:exception', () => {
+                // returning false here prevents Cypress from
+                // failing the test
+                return false
+              })
+            })
     })
